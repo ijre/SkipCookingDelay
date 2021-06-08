@@ -1,0 +1,22 @@
+{
+  "name": "Skip Cooking Delay",
+  "description": "Makes it so that you never have to wait to be able to interact when cooking meth.",
+  "author": "ijre",
+  "hooks":
+  [
+    {
+      "hook_id": "lib/units/interactions/interactionext",
+      "script_path": "main.lua"
+    }
+  ],
+  "updates":
+  [
+    {
+      "identifier": "SkipCookingDelay",
+      "host":
+      {
+        "meta": "https://github.com/ijre/SkipCookingDelay/releases/download/SCD/meta.json"
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+name: Create PAYDAY mod release
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Delete Release
+      uses: larryjoelane/delete-release-action@v1.0.24
+      with:
+        release-name: SCD
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Archive Mod
+      run: |
+         .\.github\7za.exe -tzip a ".\SCD.zip" ".\SkipCookingDelay"
+      shell: powershell
+    - name: Create New Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: SCD
+        release_name: SCD
+        draft: false
+        prerelease: false
+        body: |
+          This is the release version of the mod; might be a *little* behind in features but it's perfectly serviceable.
+    - name: Upload Mod Zip to Release
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./SCD.zip
+        asset_name: SCD.zip
+        asset_content_type: application/zip
+    - name: Hash mod and create mod meta file
+      id: create_meta_file
+      run: |
+         $(cat .\.github\meta.json).Replace("%HASH%", $(./.github/hash.exe "./SkipCookingDelay").Substring(17)) > ./meta.json
+    - name: Upload meta file to Release
+      id: upload-meta-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./meta.json
+        asset_name: meta.json
+        asset_content_type: application/json
