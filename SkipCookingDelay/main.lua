@@ -92,38 +92,44 @@ function SCD:ConfirmStats()
 end
 
 function SCD:ReplaceStats()
-  local function CheckValid(elem, invalidStats)
-    return elem ~= nil and invalidStats == true
+  local function CheckValid(invalidStats)
+    return invalidStats == true
   end
 
   local mCook = self:GetElement("methCook")
-  while CheckValid(mCook, mCook._values.chance ~= 100 or mCook._chance ~= 100) do
-    mCook._values.delay_rand = nil
-    mCook._values.delay = 0
+  if mCook ~= nil then
+    while CheckValid(mCook._values.chance ~= 100 or mCook._chance ~= 100) do
+      mCook._values.delay_rand = nil
+      mCook._values.delay = 0
 
-    mCook._values.chance = 100
-    mCook:chance_operation_set_chance(100)
+      mCook._values.chance = 100
+      mCook:chance_operation_set_chance(100)
+    end
+    ReplacedStats.mCook = mCook
   end
-  ReplacedStats.mCook = mCook
 
   local startCooking = self:GetElement("met_cooks")
-  while CheckValid(startCooking, startCooking._values.base_delay ~= 0) do
-    local index = self:FindElementInTableByName(startCooking._values.on_executed, "startCooking")
+  if startCooking ~= nil then
+    while CheckValid(startCooking._values.base_delay ~= 0) do
+      local index = self:FindElementInTableByName(startCooking._values.on_executed, "startCooking")
 
-    if index then
-      startCooking._values.on_executed[index].delay = 0
+      if index then
+        startCooking._values.on_executed[index].delay = 0
+      end
+
+      startCooking._values.base_delay = 0
     end
-
-    startCooking._values.base_delay = 0
+    ReplacedStats.startCooking = startCooking
   end
-  ReplacedStats.startCooking = startCooking
 
   local disableLab = self:GetElement("disable_interaction_methlab")
-  while CheckValid(disableLab, table.size(disableLab._values.trigger_list) ~= 0) do
-    disableLab:set_enabled(false)
-    disableLab._values.trigger_list = { }
+  if disableLab ~= nil then
+    while CheckValid(table.size(disableLab._values.trigger_list) ~= 0) do
+      disableLab:set_enabled(false)
+      disableLab._values.trigger_list = { }
+    end
+    ReplacedStats.disableLab = disableLab
   end
-  ReplacedStats.disableLab = disableLab
 end
 
 local origExec = MissionScriptElement.on_executed
