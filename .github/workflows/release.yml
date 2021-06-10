@@ -15,7 +15,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
     - name: Archive Mod
       run: |
-         .\.github\7za.exe a ".\SCD.7z" "./SkipCookingDelay"
+         .\.github\7za.exe -tzip a ".\SCD.zip" "./SkipCookingDelay"
       shell: powershell
     - name: Create New Release
       id: create_release
@@ -36,8 +36,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./SCD.7z
-        asset_name: SCD.7z
+        asset_path: ./SCD.zip
+        asset_name: SCD.zip
         asset_content_type: application/zip
     - name: Hash mod and create mod meta file
       id: create_meta_file
