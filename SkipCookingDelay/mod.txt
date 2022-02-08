@@ -1,11 +1,11 @@
 {
   "name": "Skip Cooking Delay",
-  "description": "Makes it so that you never have to wait to be able to interact when cooking meth.",
   "author": "ijre",
+  "description": "Makes it so that you never have to wait to be able to interact when cooking meth.",
   "hooks":
   [
     {
-      "hook_id": "lib/units/interactions/interactionext",
+      "hook_id": "core/lib/managers/mission/coremissionscriptelement",
       "script_path": "main.lua"
     }
   ],
